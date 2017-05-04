@@ -93,7 +93,7 @@ def main():
     # rescale our rs to account for rounding error
     r_scale = r/r_dict[nf]
     for Nn in range(ni,nf+1):
-        r_dict[Nn] /= r_scale
+        r_dict[Nn] *= r_scale
 
     # now deal with the remaining rings (except the last one)
     Ne = int(ni - 1)
@@ -214,7 +214,6 @@ def main():
     print(string)
     
     if args['--plot']:
-        print(elem_dict)
         for i in range(1,elems+1):
             en = elem_dict[i]
             nx = [node_dict[en[0]][0],node_dict[en[1]][0],node_dict[en[2]][0],node_dict[en[0]][0]]
