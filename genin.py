@@ -19,6 +19,7 @@ Options:
   --thickness=<val>             Thickness of plate
   --pressure=<val>              Uniform pressure on surface
   --plot                        Plot the surface elements
+  --savefig=<string>            Name of the file to save the fig to
 """
 
 from __future__ import print_function
@@ -211,19 +212,38 @@ def main():
     for i in range(1,elems+1):
         string += '                       {:>3}           {:<1.2e}\n'.format(i,p)
 
-    print(string)
-    
+    # are we plotting, or are we executing?
     if args['--plot']:
+        font = {'family': 'serif',
+                'weight': 'normal',
+                'size': 16,
+                }
+        fig1 = mpl.figure(facecolor='white',figsize=(14,14))
+        ax1 = mpl.axes(frameon=False)
+        ax1.get_yaxis().set_visible(False)
+        ax1.get_xaxis().set_visible(False)
         for i in range(1,elems+1):
             en = elem_dict[i]
             nx = [node_dict[en[0]][0],node_dict[en[1]][0],node_dict[en[2]][0],node_dict[en[0]][0]]
             ny = [node_dict[en[0]][1],node_dict[en[1]][1],node_dict[en[2]][1],node_dict[en[0]][1]]
-            mpl.plot(nx,ny)
+            ax1.plot(nx,ny)
+        mpl.xlim(-1.01*r,1.01*r)
+        mpl.ylim(-1.01*r,1.01*r)
         for i in range(1,nodes+1):
-            mpl.text(node_dict[i][0], node_dict[i][1], '%i' % i)
-        mpl.xlim(-1.5*r,1.5*r)
-        mpl.ylim(-1.5*r,1.5*r)
-        mpl.show()
+            ax1.text(node_dict[i][0], node_dict[i][1], '%i' % i,fontdict=font)
+        if args['--savefig']:
+            mpl.savefig(args['--savefig'], bbox_inches='tight', pad_inches=0)
+        else:
+            mpl.show()
+    else:
+        # write the file
+        ofile = open('INPUT.DAT','w')
+        ofile.truncate()
+        ofile.write(string)
+
+        # execute
+        os.system('./plate.e')
+    
 
 # ----------------------------------------------------------------------
 if __name__ == "__main__": 
