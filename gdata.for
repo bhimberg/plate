@@ -8,6 +8,7 @@ C
       COMMON CORD(170,2),NOP(300,4),IMAT(300),ORT(25,2),NBC(60),NFIX(60)
      1      ,R1(500),SK(500,90),THICK(300)
      2      ,R(3),SHEAR(300)
+      LOGICAL THERE
 C
       WRITE(*,610)
   610 FORMAT(1H ,'START SUBROUTINE GDATA')
@@ -15,7 +16,17 @@ C
 C -------------------------------- OPEN FILE
 C
       OPEN(35,FILE='INPUT.DAT')
-      OPEN(36,FILE='OUTPUT.DAT',STATUS='NEW')
+      OPEN(36,FILE='OUTPUT.DAT',STATUS='UNKNOWN')
+      INQUIRE(FILE='output.dat',EXIST=THERE)
+      OPEN(37,FILE='output.dat',STATUS='UNKNOWN',ACCESS='APPEND')
+  611 FORMAT(1H , '#  nodes  elems           w       thick',
+     1            '       young       poisson        radius',
+     1            '      pressure')
+  612 FORMAT(1H , '# PIMCID: 123456789')
+      IF (.NOT. THERE) THEN
+        WRITE(37,612)
+        WRITE(37,611)
+      ENDIF
 C
 C --------------------------------- READ AND PRINT TILTLE AND CONTROL
 C
