@@ -40,7 +40,7 @@ def main():
     # gather the optional arguments
     E = 5000.0
     if args['--young']:
-        E = float(args['--E'])
+        E = float(args['--young'])
     v = 0.3
     if args['--poisson']:
         v = float(args['--poisson'])
@@ -62,7 +62,10 @@ def main():
     # determine number of constrained nodes
     cnodes = int(nf + 2*(nf - ni + 1) - 1)
     
-    # the idea area of an average element
+    # the area of an average element
+    Ae = (0.5*np.pi*r**2)/elems
+
+    # the width of a ring
     dR = r/(nf-ni+1)
 
     # time to generate our nodes our nodes
@@ -75,11 +78,31 @@ def main():
     # going to create a dictionary of rings as well
     ring_dict_x = {}
     ring_dict_y = {}
+    
+    # calculate the radius values
+    r_dict = {}
+    Ne = int(ni - 1)
+    for Nn in range(ni,nf+1):
+        # each ring should have the same area
+        Ar = 1.0*Ne*Ae
+        r_dict[Nn] = np.sqrt(2.0*Ar/np.pi)
+
+        # update number of elements for next pass
+        Ne += int(2*(Nn+1)-1)
+
+    # rescale our rs to account for rounding error
+    r_scale = r/r_dict[nf]
+    for Nn in range(ni,nf+1):
+        r_dict[Nn] /= r_scale
 
     # now deal with the remaining rings (except the last one)
-    ri = 0.0
+    Ne = int(ni - 1)
     for Nn in range(ni,nf+1):
-        ri += dR
+        # each ring should have the same area
+        ri = r_dict[Nn]
+
+        # update number of elements for next pass
+        Ne += int(2*(Nn+1)-1)
 
         # calculate outer positions
         theta = 3.0*np.pi/2.0
@@ -199,8 +222,8 @@ def main():
             mpl.plot(nx,ny)
         for i in range(1,nodes+1):
             mpl.text(node_dict[i][0], node_dict[i][1], '%i' % i)
-        mpl.xlim(-r,r)
-        mpl.ylim(-r,r)
+        mpl.xlim(-1.5*r,1.5*r)
+        mpl.ylim(-1.5*r,1.5*r)
         mpl.show()
 
 # ----------------------------------------------------------------------
