@@ -5,7 +5,7 @@ C
       SUBROUTINE FORMK
       COMMON /CONTR/ TITLE(18),NP,NE,NB,NDF,NCN,NLD,NMAT,NSZF,LI
       COMMON CORD(900,2),NOP(900,4),IMAT(900),ORT(25,2),NBC(90),NFIX(90)
-     1      ,R1(2700),SK(2700,90),THICK(900)
+     1      ,R1(2700),SK(2700,180),THICK(900)
      2      ,R(3),SHEAR(900)
       DIMENSION XK(9,9),XK1(9,9),BDB(9,9),AINV(9,9),DUMMY(9,9),IXX(9)
 C
@@ -15,7 +15,7 @@ C
 C
 C --------------------------- SET BANDMAX AND NO OF EQUATIONS
 C
-      NBAND=90
+      NBAND=180
 C
 C --------------------------- ZERO STIFFNESS MATRIX
 C
