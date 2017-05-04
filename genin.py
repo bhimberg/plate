@@ -6,12 +6,14 @@ Description:
 
 Usage:
     genin.py [options] --radius=<val> --outer_nodes=<val> --inner_nodes=<val>
+    genin.py [options] --radius=<val> --elements=<val>
 
     genin.py -h | --help
 
 Options:
   --help                        Show this screen.
   --radius=<val>                Radius of the circle
+  --elements=<val>              Take the first instance at or equal to this value
   --outer_nodes=<val>           Number of on the outer ring
   --inner_nodes=<val>           Number of on the inner ring (not the center)
   --young=<val>                 Young's modulus (material related)
@@ -35,8 +37,50 @@ def main():
 
     # gather all required arguments
     r = float(args['--radius'])
-    ni = int(args['--inner_nodes'])
-    nf = int(args['--outer_nodes'])
+    if args['--elements']:
+        elements = int(args['--elements'])
+
+        ni = 3
+        nf = 3
+        elems = 1
+        while elems < elements:
+            elems = ni-1;
+            for i in range(ni, nf):
+                elems += 2*i-1
+            nf += 1
+        nf -= 1
+        elems = 1
+        while elems > elements:
+            ni += 1
+            elems = ni-1;
+            for i in range(ni, nf):
+                elems += 2*i-1
+        if ni > 3:
+            ni -= 1
+
+        cni = ni
+        cnf = nf
+        elems = 1
+        while elems < elements:
+            elems = ni-1;
+            for i in range(ni, nf):
+                elems += 2*i-1
+        celems = elems
+
+        elems = 1
+        while elems < elements:
+            ni += 1
+            nf += 1
+            elems = ni-1;
+            for i in range(ni, nf):
+                elems += 2*i-1
+
+        if celems < elems:
+            ni = cni
+            nf = cnf
+    else:
+        ni = int(args['--inner_nodes'])
+        nf = int(args['--outer_nodes'])
 
     # gather the optional arguments
     E = 5000.0
@@ -62,6 +106,8 @@ def main():
 
     # determine number of constrained nodes
     cnodes = int(nf + 2*(nf - ni + 1) - 1)
+
+    print('nodes %i, cnodes %i, elems %i' % (nodes,cnodes,elems))
     
     # the area of an average element
     Ae = (0.5*np.pi*r**2)/elems
@@ -240,10 +286,10 @@ def main():
         ofile = open('INPUT.DAT','w')
         ofile.truncate()
         ofile.write(string)
+        ofile.close()
 
         # execute
         os.system('./plate.e')
-    
 
 # ----------------------------------------------------------------------
 if __name__ == "__main__": 
