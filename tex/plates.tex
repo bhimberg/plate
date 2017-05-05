@@ -100,7 +100,7 @@ Finite Element Methods are ubiquitous in Materials Science. They represent the
 melding of boundary conditions and partial differential equations. Here such a
 method combines a fourth order partial differential equation in polar coordinates
 with a simply supported circular plate. Focusing on the maximum deflection, a
-comparison of of this finite element method is made to the analytic results for
+comparison of this finite element method is made to the analytic results for
 a steel plate under uniform pressure. The primary contribution to error is found
 to be the ratio of plate thickness to plate support length, proportional to the
 radius here.
@@ -152,7 +152,7 @@ on GitHub \cite{github} as well as the source code and graphs for this paper.
 Both the analytic solution and finite element method begin with the same
 differential equation
 \begin{equation} \label{eqn:dp}
-\Delta^2\Delta^2 w = \frac{P}{D}
+\nabla^2\nabla^2 w = \frac{P}{D}
 \end{equation}
 where $P$ is the pressure and $D$ is the flexural rigidity. This is the most
 general form, and is also a starting point for square plates.
@@ -164,7 +164,7 @@ its polar coordinates definition to arrive at
 \begin{strip}
 \noindent\makebox[\linewidth][l]{\rule{0.4\textwidth}{0.4pt}}
 \begin{equation} \label{eqn:dp2}
-\Delta^2\Delta^2 w =
+\nabla^2\nabla^2 w =
 \left(\frac{\partial^2}{\partial r^2} +
 \frac{1}{r}\frac{\partial}{\partial r} +
 \frac{1}{r^2}\frac{\partial^2}{\partial \theta^2}\right)
@@ -214,11 +214,11 @@ for $w_{max}$, the maximum deflection at the center of a disc under uniform
 constant pressure $p$. Here $E$ and $\nu$ are Young's Modulus and Poisson's ratio,
 properties of the material the disc is comprised of. The height $h$ and radius $r$
 are measurements of the spatial extent of the disc, and their ratio must be
-i$h/r < 0.1$ in order to match with experimental results \cite{boresi}.
+$h/r < 0.1$ in order to match with experimental results \cite{boresi}.
 
 \section{Finite Element Method} \label{sec:fem}
 Finite element methods (FEMs) have a very specific set of requirements: boundary
-conditions, on an equation describing the interaction of adjacent domains. They
+conditions and an equation describing the interaction of adjacent domains. They
 are not unlike projection methods used in quantum Monte Carlo (QMC). For example
 in the case of Path Integral Ground State (PIGS) \cite{pigs} one would use a
 known wavefunction at two boundaries in  imaginary time and propagate them towards
@@ -282,15 +282,17 @@ a mesh with 898 elements as in \cref{fig:meshm}
 was used. While none of the meshes have finite elements with precisely the same
 area, which is important since the area determines the amount of pressure a single
 finite element feels and therefor affects its relative contribution to the mesh, as
-the number of elements scales up the standard deviation goes down: we approach the continuum
-limit.
+the number of elements scales up the standard deviation goes down: the continuum
+limit is approached. For the mesh in \cref{fig:meshm}, the average area is $\SI{109.13(2)}{\milli\meter^2}$.
 
 Finally it warrants discussing the expansion of the Fortran code mentioned earlier:
 the original code was only capable of handling 170 elements. The code was successfully
-modified to handle up to 900 elements for this paper.
+modified to handle up to 900 elements for this paper. The python script 'fem.py'
+is responsible for launching the FEM Fortran code and generating meshes which the
+python script 'ana.py' is responsible for producing the analytic results.
 
 \section{Comparison} \label{sec:comp}
-For this entire section a set of constant were chosen from \cite{boresi}, problem
+For this entire section a set of constants were chosen from \cite{boresi}, problem
 13.16. Each graph to follow with keep all but one parameter constant, which will
 be noted. Consider \cref{tab:params}
 \begin{table}[ht]
@@ -310,13 +312,13 @@ be noted. Consider \cref{tab:params}
     \end{tabular}
     \caption{These are the parameters used for all graphs to follow. Each graph
     will treat a parameter as tunable while locking the others: the idea is to
-    test a range of values. This will help highlight which variables this FEM
-    is more sensitive to relative to the analytic method.}
+    test a range of values. The material used here is steel, and is an
+    elastically isotropic material.}
     \label{tab:params}
 \end{table}
 where the variables correspond to the pressure, Young's modulus, radius, thickness,
 and Poisson's ratio respectively. Unless stated otherwise, the mesh will be as in
-\cref{fig:meshm} with 898 elements and 494 nodes.
+\cref{fig:meshm} with 898 elements and 494 nodes. 
 
 \Cref{fig:ve}
 \begin{figure}[h]
@@ -371,7 +373,7 @@ error: this looks like noise, and is likely related to the inconsistency of
 element area in the generated mesh. Yet taking a second look, note the magnitude
 of the error: it is constant, around 0.9 percent. The errors are too large to be
 rounding errors. It may be related to the underlying algorithm of the 'Plates'
-FEM, specifically the order of the method used to approximate the $\Delta^2$.
+FEM, specifically the order of the method used to approximate the $\nabla^2$.
 
 Next consider what happens when the ratio between thickness $h$ and $r$, the
 radius, becomes the tunable parameter. The expectation is that as this ratio
@@ -384,7 +386,12 @@ measure of how correct either method in the thick plate regime.
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.5\textwidth]{./tr_scaling_err.pdf}
-    \caption{}
+    \caption{The relative error between the FEM and analytic data. There seems
+    to be a strong divergence here as the thickness increases, the ratio of
+    $h/r$ approaching unity. While this divergence favors the finite element
+    method, in reality the two should agree with respect to thickness. It could
+    be related to the elements in the center of \cref{fig:meshm} being notably
+    larger than all other elements.}
     \label{fig:tre}
 \end{figure}
 shows that the two methods diverge. This divergence is in favor of the FEM method.
@@ -393,7 +400,7 @@ much less than the measured and in fact a prefactor
 \begin{equation} \label{eqn:pre}
     C = 1 + 5.72\left(\frac{h}{a}\right)^2
 \end{equation}
-is necessary, with $a$ as the radius to match \cref{eqn:def}.
+is necessary, with $a$ as the radius to match \cref{eqn:def}. 
 
 Now a look at the material parameters, Young's modulus and Poisson's ratio, remains.
 Considering \cref{eqn:def}, Young's modulus $E$ is of the same order as the pressure $P$.
@@ -402,13 +409,50 @@ isn't expected to cause the two methods to diverge. \Cref{fig:vre}
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.5\textwidth]{./ym_scaling_err.pdf}
-    \caption{}
+    \caption{The error here seems to be systematic: it appears constant, with some
+    small variation about the average. At least for this range, error won't increase
+    or decrease with changes to Young's modulus.}
     \label{fig:vre}
 \end{figure}
 supports this expectation with what seems a constant error, however the magnitude
 is within 1.2 percent, slightly larger than the 0.9 percent found with pressure.
 
+Finally a look at $\nu$ which has a more complicated relationship with $w_{max}$:
+it scales quadratically. The result is as in \cref{fig:nu} 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{./nu_scaling_err.pdf}
+    \caption{Since $\nu$ is a ratio, the range presented here is reasonable. There
+    certainly is some scaling present with respect. The error though is within 1.5
+    percent.}
+    \label{fig:nu}
+\end{figure}
+where divergence between the finite element method and the analytic solution increases
+as a function of $\nu$, though being a ratio within the range presented for most
+materials and the maximum error here being below 1.5 percent makes it less of an
+issue.
+
 \section{Discussion} \label{sec:disc}
+The results presented indicate that for thin plates, where the plate thickness is
+a tenth or less of the plates radius, the FEM method certainly matches the analytic
+method. The error seems independent of Young's modulus and pressure. Error increases
+as poison's ratio increases, however for most materials the error is small. That
+leaves the error due to the ratio of plate thickness and plate radius.
+
+For the parameters in \cref{tab:params} the magnitude of the deflection increased
+as the ratio approached 1.0. This is in agreement with experimental expectations,
+and may be justifiable to an extent: domains have finite size and materials have
+structure, impurities. The analytic solution treats the material as pure and
+continuous. Still, while the FEM method is technically closer in this regime, it
+is not near close enough. A ratio of 1.0 should correspond to a prefactor of
+$6.72$ in \cref{eqn:pre}, yet the FEM 'prefactor' is only $1.15$.
+
+Overall this FEM is intended to solve more difficult problems which still fall
+in the thin plate regime, such as non-uniform thickness or a varying pressure
+across the surface or perhaps holes which are not aligned to origin. Future
+work would involve improving mesh generation, and perhaps implementing a
+higher order Laplacian operator to decrease error. Finally, this method may
+lend itself well to GPU computation.
 
 %% The Appendices part is started with the command \appendix;
 %% appendix sections are then done as normal sections
