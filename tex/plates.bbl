@@ -1,0 +1,35 @@
+\begin{thebibliography}{1}
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\texttt{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+\expandafter\ifx\csname href\endcsname\relax
+  \def\href#1#2{#2} \def\path#1{#1}\fi
+
+\bibitem{zien}
+O.~Zienkiewicz, \href{https://books.google.com/books?id=\_d1RAAAAMAAJ}{{The
+  finite element method in engineering science}}, McGraw-Hill, 1971.
+\newline\urlprefix\url{https://books.google.com/books?id=\_d1RAAAAMAAJ}
+
+\bibitem{boresi}
+A.~Boresi, R.~Schmidt,
+  \href{https://books.google.com/books?id=eLMeAQAAIAAJ}{{Advanced mechanics of
+  materials}}, John Wiley \& Sons, 2003.
+\newline\urlprefix\url{https://books.google.com/books?id=eLMeAQAAIAAJ}
+
+\bibitem{geocities}
+T.~Taki, {Plates}, \url{http://www.geocities.jp/toshimi\_taki/plate/plate.htm}
+  (2004).
+
+\bibitem{github}
+B.~E. Himberg, {Plates}, \url{https://github.com/bhimberg/plates} (2016).
+
+\bibitem{pigs}
+A.~Sarsa, K.~E. Schmidt, W.~R. Magro,
+  \href{http://dx.doi.org/10.1063/1.481926}{{A path integral ground state
+  method}}, The Journal of Chemical Physics 113~(4) (2000) 1366--1371.
+\newblock \href {http://arxiv.org/abs/http://dx.doi.org/10.1063/1.481926}
+  {\path{arXiv:http://dx.doi.org/10.1063/1.481926}}, \href
+  {http://dx.doi.org/10.1063/1.481926} {\path{doi:10.1063/1.481926}}.
+\newline\urlprefix\url{http://dx.doi.org/10.1063/1.481926}
+
+\end{thebibliography}
