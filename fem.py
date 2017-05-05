@@ -262,7 +262,7 @@ def main():
     if args['--plot']:
         font = {'family': 'serif',
                 'weight': 'normal',
-                'size': 16,
+                'size': 30,
                 }
         fig1 = mpl.figure(facecolor='white',figsize=(14,14))
         ax1 = mpl.axes(frameon=False)
@@ -275,8 +275,8 @@ def main():
             ax1.plot(nx,ny)
         mpl.xlim(-1.01*r,1.01*r)
         mpl.ylim(-1.01*r,1.01*r)
-        #for i in range(1,nodes+1):
-        #    ax1.text(node_dict[i][0], node_dict[i][1], '%i' % i,fontdict=font)
+        for i in range(1,nodes+1):
+            ax1.text(node_dict[i][0], node_dict[i][1], '%i' % i,fontdict=font)
         if args['--savefig']:
             mpl.savefig(args['--savefig'], bbox_inches='tight', pad_inches=0)
         else:
