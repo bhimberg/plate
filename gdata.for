@@ -17,12 +17,12 @@ C -------------------------------- OPEN FILE
 C
       OPEN(35,FILE='INPUT.DAT')
       OPEN(36,FILE='OUTPUT.DAT',STATUS='UNKNOWN')
-      INQUIRE(FILE='output.dat',EXIST=THERE)
-      OPEN(37,FILE='output.dat',STATUS='UNKNOWN',ACCESS='APPEND')
-  611 FORMAT(1H , '#  nodes  elems                 w             thick',
+      INQUIRE(FILE='fem.dat',EXIST=THERE)
+      OPEN(37,FILE='fem.dat',STATUS='UNKNOWN',ACCESS='APPEND')
+  611 FORMAT('#  nodes  elems                 w             thick',
      1            '             young           poisson',
      1            '            radius          pressure')
-  612 FORMAT(1H , '# PIMCID: 123456789')
+  612 FORMAT('# PIMCID: 123456789')
       IF (.NOT. THERE) THEN
         WRITE(37,612)
         WRITE(37,611)

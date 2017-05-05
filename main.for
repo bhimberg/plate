@@ -14,8 +14,6 @@ C ----------------------------- READ INPUT GEOMETRY AND PROPERTY
 C
       CALL GDATA
       NSZF=NP*NDF
-      WRITE(*,645) NSZF
-  645 FORMAT(1H , I7)
 C
 C ----------------------------- READ LOAD
 C

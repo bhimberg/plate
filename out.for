@@ -23,7 +23,7 @@ C
   640 FORMAT(1H , I7,3X,3G12.5)
   100 CONTINUE
 C --------------------------- STARDARD OUTPUT
-  643 FORMAT(1H , I8,I7,7E18.9)
+  643 FORMAT(I8,I7,7E18.9)
       WRITE(37,643) NP, NE, R1(3-2), THICK(1), ORT(1,1), ORT(1,2),
      1             CORD(NP,2), PRESSURE(1)
 C
