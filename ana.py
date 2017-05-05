@@ -40,14 +40,14 @@ def main():
     # calculate the deflection
     w = 3.0*(1-v)*(5+v)*p*r**4/E/z**3/16
 
-    if os.path.isfile('fem.dat'):
-        f = open('fem.dat' 'a')
+    if os.path.isfile('ana.dat'):
+        f = open('ana.dat', 'a')
     else:
-        f = open('fem.dat' 'a')
-        f.write('# PIMCID: 234567891')
-        f.write('#  nodes  elems                 w             thick             young           poisson            radius          pressure')
+        f = open('ana.dat', 'a')
+        f.write('# PIMCID: 234567891\n')
+        f.write('#  nodes  elems                 w             thick             young           poisson            radius          pressure\n')
 
-    f.write(' 0  1  %9.8e  %9.8e  %9.8e  %9.8e  %9.8e  %9.8e' % (w,z,E,v,r))
+    f.write('       0      1  %18.17E  %18.17E  %18.17E  %18.17E  %18.17E  %18.17E\n' % (w,z,E,v,r,p))
     f.close()
 
 # ----------------------------------------------------------------------
